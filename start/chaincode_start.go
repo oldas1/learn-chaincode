@@ -76,6 +76,24 @@ func (t *SimpleChaincode) Query(stub shim.ChaincodeStubInterface, function strin
 		return nil, nil;
 	}
 	fmt.Println("query did not find func: " + function)						//error
+	
+func (t *SimpleChaincode) write(stub shim.ChaincodeStubInterface, args []string) ([]byte, error) {
+    var key, value string
+    var err error
+    fmt.Println("running write()")
+
+    if len(args) != 2 {
+        return nil, errors.New("Incorrect number of arguments. Expecting 2. name of the key and value to set")
+    }
+
+    key = args[0]                            //rename for fun
+    value = args[1]
+    err = stub.PutState(key, []byte(value))  //write the variable into the chaincode state
+    if err != nil {
+        return nil, err
+    }
+    return nil, nil
+}
 
 	return nil, errors.New("Received unknown function query: " + function)
 }
